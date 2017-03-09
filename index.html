@@ -1,1 +1,110 @@
-贺梦晨是白痴!
+<!DOCTYPE html>
+<html>
+
+<body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+
+<script src="IDValidator.min.js"></script>
+<script src="GB2260.min.js" ></script>
+
+
+
+<select id="worldCountries" style="display:none">
+	
+</select>
+
+<h1>身份证 demo...</h1>
+<input id="wy_idcard_btn" type="button" value="生成随机身份证">
+<pre id="wy_idcard_result"></pre>
+
+
+<pre class="lang:js"><script type="text/javascript" src="http://js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js"></script>
+ 
+<script type="text/javascript">
+ 
+
+var url = "http://api.population.io:80/1.0/countries";
+$.get( url, function( data ) {
+  
+  // console.log(data);
+  
+  var results = [];
+  data = data.countries;
+  $.each(data, function(index, item){
+  	var tmp = {id:index, text:item};
+  	// console.log(tmp);
+  	results.push(tmp);
+  });
+  // console.log(results);
+
+ //  $("#worldCountries").select2({
+ //  		data: data	
+	// });
+});
+
+var onSuccess = function(location){
+  alert(
+      "Lookup successful:\n\n"
+      + JSON.stringify(location, undefined, 4)
+  );
+};
+ 
+var onError = function(error){
+  alert(
+      "Error:\n\n"
+      + JSON.stringify(error, undefined, 4)
+  );
+};
+ 
+// geoip2.city(onSuccess, onError);
+
+$("#wy_idcard_btn").on("click", function(){
+      //新建普通实例
+      // var Validator = new IDValidator();
+
+    //或使用带地址码实例,需要引入GB2260
+    var Validator = new IDValidator( GB2260 );
+
+    //制造一个18位ID
+    var ID = Validator.makeID();
+
+    console.log(ID);
+
+    var content = Validator.getInfo(ID);
+    content = JSON.stringify(content, null, 4);
+
+    var toDisplay = ID + "\n\n" + content;
+
+    $("#wy_idcard_result").text(toDisplay);
+
+});
+ 
+</script></pre>
+
+
+<div id="googleMap" style="width:100%;height:400px; display:none"></div>
+
+<script>
+function myMap() {
+var mapProp= {
+    center:new google.maps.LatLng(51.508742,-0.120850),
+    zoom:5,
+};
+var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+}
+</script>
+         
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW4M0LEUN0loaTozKo_EY7TP6cjcwHjTw&callback=myMap"></script> -->
+<!--
+To use this code on your website, get a free API key from Google.
+Read more at: https://www.w3schools.com/graphics/google_maps_basic.asp
+-->
+
+
+
+</body>
+</html>
